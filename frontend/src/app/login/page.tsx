@@ -17,6 +17,23 @@ const schema = z.object({
 
 type LoginForm = z.infer<typeof schema>;
 
+const MARQUEE_ITEMS = [
+  "Digital Radiography",
+  "CT Scan Analysis",
+  "MRI Imaging",
+  "Ultrasound Diagnostics",
+  "PET Scan Interpretation",
+  "Mammography Screening",
+  "Fluoroscopy Guidance",
+  "Interventional Radiology",
+  "Nuclear Medicine",
+  "DEXA Bone Densitometry",
+  "Angiography",
+  "Chest X-Ray Review",
+  "Neuroradiology",
+  "Musculoskeletal Imaging",
+];
+
 export default function LoginPage() {
   const router = useRouter();
   const { setUser } = useAuthStore();
@@ -37,28 +54,43 @@ export default function LoginPage() {
     }
   };
 
+  const track = [...MARQUEE_ITEMS, ...MARQUEE_ITEMS];
+
   return (
     <div className="relative min-h-screen flex items-center justify-center p-6">
 
-      {/* Background — real MRI suite photograph from Unsplash */}
+      <style>{`
+        @keyframes marquee-scroll {
+          0%   { transform: translateX(0); }
+          100% { transform: translateX(-50%); }
+        }
+        .marquee-track {
+          animation: marquee-scroll 32s linear infinite;
+        }
+        .marquee-track:hover {
+          animation-play-state: paused;
+        }
+      `}</style>
+
+      {/* Background — radiology instruments photo */}
       <Image
-        src="https://images.unsplash.com/photo-1538108149393-fbbd81895907?w=1920&auto=format&fit=crop&q=60"
+        src="https://images.unsplash.com/photo-1516069677018-378515003435?w=1920&auto=format&fit=crop&q=60"
         alt=""
         fill
         className="object-cover object-center"
         priority
       />
 
-      {/* Light green wash so the form stays readable */}
+      {/* Light overlay */}
       <div
         className="absolute inset-0"
-        style={{ backgroundColor: "rgba(220, 242, 224, 0.87)" }}
+        style={{ backgroundColor: "rgba(218, 241, 222, 0.88)" }}
       />
 
       <div className="relative z-10 w-full max-w-md">
 
         {/* Logo */}
-        <div className="flex items-center gap-4 mb-10">
+        <div className="flex items-center gap-4 mb-6">
           <div
             className="w-14 h-14 rounded-2xl flex items-center justify-center shadow-md"
             style={{ backgroundColor: "#2E7D32" }}
@@ -70,6 +102,25 @@ export default function LoginPage() {
             <p className="text-sm font-medium mt-0.5" style={{ color: "#4A6741" }}>
               Radiology Command Centre
             </p>
+          </div>
+        </div>
+
+        {/* Marquee */}
+        <div
+          className="overflow-hidden mb-7 py-2 rounded-lg"
+          style={{ backgroundColor: "rgba(255,255,255,0.45)" }}
+        >
+          <div className="marquee-track flex whitespace-nowrap">
+            {track.map((item, i) => (
+              <span
+                key={i}
+                className="inline-flex items-center gap-2 px-4 text-sm font-normal"
+                style={{ color: "#2E5E31" }}
+              >
+                {item}
+                <span style={{ color: "#7BBD80", fontSize: "0.6rem" }}>●</span>
+              </span>
+            ))}
           </div>
         </div>
 
