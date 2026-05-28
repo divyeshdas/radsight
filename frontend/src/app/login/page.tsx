@@ -65,7 +65,7 @@ export default function LoginPage() {
           100% { transform: translateX(-50%); }
         }
         .marquee-track {
-          animation: marquee-scroll 32s linear infinite;
+          animation: marquee-scroll 16s linear infinite;
         }
         .marquee-track:hover {
           animation-play-state: paused;
@@ -74,7 +74,7 @@ export default function LoginPage() {
 
       {/* Background — radiology instruments photo */}
       <Image
-        src="https://images.unsplash.com/photo-1516069677018-378515003435?w=1920&auto=format&fit=crop&q=60"
+        src="https://images.unsplash.com/photo-1576671081837-49000212a370?w=1920&auto=format&fit=crop&q=60"
         alt=""
         fill
         className="object-cover object-center"
@@ -84,7 +84,7 @@ export default function LoginPage() {
       {/* Light overlay */}
       <div
         className="absolute inset-0"
-        style={{ backgroundColor: "rgba(218, 241, 222, 0.88)" }}
+        style={{ backgroundColor: "rgba(225, 245, 228, 0.68)" }}
       />
 
       <div className="relative z-10 w-full max-w-md">
