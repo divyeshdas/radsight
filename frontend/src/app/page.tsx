@@ -1,8 +1,16 @@
-export default function Home() {
-  return (
-    <main className="flex min-h-screen flex-col items-center justify-center">
-      <h1 className="text-4xl font-bold text-accent-blue">RadSight</h1>
-      <p className="mt-2 text-text-secondary">AI Radiology Intelligence Platform</p>
-    </main>
-  );
+"use client";
+
+import { useEffect } from "react";
+import { useRouter } from "next/navigation";
+import { useAuthStore } from "@/store/auth";
+
+export default function Root() {
+  const router = useRouter();
+  const { isAuthenticated } = useAuthStore();
+
+  useEffect(() => {
+    router.replace(isAuthenticated ? "/dashboard" : "/login");
+  }, [isAuthenticated, router]);
+
+  return null;
 }
