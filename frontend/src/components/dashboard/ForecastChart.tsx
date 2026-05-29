@@ -75,7 +75,7 @@ export function ForecastChart({ data }: { data: ForecastRow[] }) {
         lineStyle: { opacity: 0 },
         stack: "ci",
         symbol: "none",
-        areaStyle: { color: "#8B5CF615", origin: "auto" },
+        areaStyle: { color: "#14B8A618", origin: "auto" },
         tooltip: { show: false },
       },
       {
@@ -83,15 +83,15 @@ export function ForecastChart({ data }: { data: ForecastRow[] }) {
         type: "line",
         data: forecasts,
         smooth: true,
-        lineStyle: { color: "#8B5CF6", width: 2 },
+        lineStyle: { color: "#14B8A6", width: 2 },
         symbol: "none",
-        itemStyle: { color: "#8B5CF6" },
+        itemStyle: { color: "#14B8A6" },
         areaStyle: {
           color: {
             type: "linear", x: 0, y: 0, x2: 0, y2: 1,
             colorStops: [
-              { offset: 0, color: "#8B5CF620" },
-              { offset: 1, color: "#8B5CF600" },
+              { offset: 0, color: "#14B8A620" },
+              { offset: 1, color: "#14B8A600" },
             ],
           },
         },

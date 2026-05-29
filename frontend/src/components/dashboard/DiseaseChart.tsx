@@ -45,12 +45,12 @@ export function DiseaseChart({ data }: DiseaseChartProps) {
             type: "linear",
             x: 0, y: 0, x2: 1, y2: 0,
             colorStops: [
-              { offset: 0, color: "#0EA5E910" },
-              { offset: 1, color: "#0EA5E9" },
+              { offset: 0, color: "#14B8A610" },
+              { offset: 1, color: "#14B8A6" },
             ],
           },
         },
-        emphasis: { itemStyle: { color: "#38BDF8" } },
+        emphasis: { itemStyle: { color: "#2DD4BF" } },
       },
     ],
   };

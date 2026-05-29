@@ -7,12 +7,12 @@
 /* ─── Light teal theme (default) ───────────────────────────────────────────── */
 :root,
 [data-theme="light"] {
-  --bg-primary: #F0FDFA;
+  --bg-primary: #EEF9F7;
   --bg-surface: #F5FFFE;
   --bg-panel: #FFFFFF;
   --bg-elevated: #FFFFFF;
-  --border-color: #CCFBF1;
-  --border-subtle: #E0FAF5;
+  --border-color: #C8EDE8;
+  --border-subtle: #DCF5F1;
 
   --text-primary: #0F2922;
   --text-secondary: #3D6B64;
@@ -32,14 +32,23 @@
   --severity-high: #F97316;
   --severity-critical: #EF4444;
 
+  --sidebar-bg: #0D3D38;
+  --sidebar-text-primary: #F0FDFA;
+  --sidebar-text-secondary: rgba(240, 253, 250, 0.65);
+  --sidebar-text-muted: rgba(240, 253, 250, 0.4);
+  --sidebar-border: rgba(255, 255, 255, 0.08);
+  --sidebar-item-active: rgba(255, 255, 255, 0.13);
+  --sidebar-item-hover: rgba(255, 255, 255, 0.07);
+
   --glass-bg: rgba(240, 253, 250, 0.85);
   --glass-border: rgba(20, 184, 166, 0.2);
   --card-bg: rgba(255, 255, 255, 0.95);
   --card-border: rgba(20, 184, 166, 0.15);
 
-  --shadow-sm: 0 1px 3px rgba(15, 118, 110, 0.08);
-  --shadow-md: 0 4px 12px rgba(15, 118, 110, 0.1);
-  --shadow-lg: 0 8px 24px rgba(15, 118, 110, 0.12);
+  --shadow-sm: 0 1px 2px rgba(15, 118, 110, 0.06);
+  --shadow-md: 0 4px 12px rgba(15, 118, 110, 0.08);
+  --shadow-lg: 0 8px 24px rgba(15, 118, 110, 0.10);
+  --card-shadow: 0 1px 3px rgba(15, 118, 110, 0.07), 0 4px 12px rgba(15, 118, 110, 0.04);
 
   --scrollbar-track: #F0FDFA;
   --scrollbar-thumb: #99F6E4;
@@ -47,17 +56,17 @@
 
 /* ─── Dark theme ────────────────────────────────────────────────────────────── */
 [data-theme="dark"] {
-  --bg-primary: #042F2E;
-  --bg-surface: #064E3B;
-  --bg-panel: #065F46;
-  --bg-elevated: #0F766E;
-  --border-color: #115E59;
-  --border-subtle: #0D4D47;
+  --bg-primary: #061C1A;
+  --bg-surface: #0A2E2B;
+  --bg-panel: #0D3530;
+  --bg-elevated: #134140;
+  --border-color: #1A4E4A;
+  --border-subtle: #133C38;
 
-  --text-primary: #F0FDFA;
-  --text-secondary: #99F6E4;
-  --text-muted: #5EEAD4;
-  --text-inverse: #042F2E;
+  --text-primary: #E8FAF7;
+  --text-secondary: #8ECEC8;
+  --text-muted: #5A9E97;
+  --text-inverse: #061C1A;
 
   --accent-blue: #14B8A6;
   --accent-cyan: #2DD4BF;
@@ -72,17 +81,26 @@
   --severity-high: #F97316;
   --severity-critical: #EF4444;
 
-  --glass-bg: rgba(6, 78, 59, 0.7);
-  --glass-border: rgba(20, 184, 166, 0.3);
-  --card-bg: rgba(6, 95, 70, 0.6);
-  --card-border: rgba(20, 184, 166, 0.2);
+  --sidebar-bg: #031412;
+  --sidebar-text-primary: #E8FAF7;
+  --sidebar-text-secondary: rgba(232, 250, 247, 0.6);
+  --sidebar-text-muted: rgba(232, 250, 247, 0.38);
+  --sidebar-border: rgba(255, 255, 255, 0.06);
+  --sidebar-item-active: rgba(20, 184, 166, 0.18);
+  --sidebar-item-hover: rgba(20, 184, 166, 0.09);
 
-  --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.4);
-  --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.5);
-  --shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.6);
+  --glass-bg: rgba(10, 46, 43, 0.75);
+  --glass-border: rgba(20, 184, 166, 0.25);
+  --card-bg: rgba(13, 53, 48, 0.8);
+  --card-border: rgba(20, 184, 166, 0.18);
 
-  --scrollbar-track: #042F2E;
-  --scrollbar-thumb: #115E59;
+  --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.35);
+  --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.45);
+  --shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.55);
+  --card-shadow: 0 1px 3px rgba(0, 0, 0, 0.3), 0 4px 12px rgba(0, 0, 0, 0.2);
+
+  --scrollbar-track: #061C1A;
+  --scrollbar-thumb: #1A4E4A;
 }
 
 /* ─── Base ──────────────────────────────────────────────────────────────────── */
@@ -146,6 +164,7 @@ h1, h2, h3, h4, h5, h6 {
 .panel {
   background-color: var(--bg-panel);
   border: 1px solid var(--border-color);
+  box-shadow: var(--card-shadow);
 }
 
 /* ─── Severity colors ───────────────────────────────────────────────────────── */
@@ -173,3 +192,24 @@ h1, h2, h3, h4, h5, h6 {
 
 .animate-fade-in  { animation: fadeIn 0.3s ease-in-out; }
 .animate-slide-up { animation: slideUp 0.3s ease-out; }
+
+/* ─── Sidebar nav items ─────────────────────────────────────────────────────── */
+.sidebar-item {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.5rem 0.75rem;
+  border-radius: 0.5rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+  transition: background-color 0.15s ease, color 0.15s ease;
+  color: var(--sidebar-text-secondary);
+}
+.sidebar-item:hover {
+  background-color: var(--sidebar-item-hover);
+  color: var(--sidebar-text-primary);
+}
+.sidebar-item.active {
+  background-color: var(--sidebar-item-active);
+  color: var(--sidebar-text-primary);
+}

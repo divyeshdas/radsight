@@ -5,7 +5,7 @@ import { usePathname } from "next/navigation";
 import { cn } from "@/lib/utils";
 import {
   LayoutDashboard, FileText, Search, BarChart3,
-  Activity, Settings, LogOut, ChevronRight,
+  Activity, LogOut, ChevronRight,
 } from "lucide-react";
 import { useAuthStore } from "@/store/auth";
 import { logout } from "@/lib/auth";
@@ -30,57 +30,98 @@ export function Sidebar() {
   };
 
   return (
-    <aside className="fixed left-0 top-0 h-screen w-60 flex flex-col z-30"
-      style={{ backgroundColor: "var(--bg-surface)", borderRight: "1px solid var(--border-color)" }}>
-
+    <aside
+      className="fixed left-0 top-0 h-screen w-60 flex flex-col z-30"
+      style={{
+        backgroundColor: "var(--sidebar-bg)",
+        borderRight: "1px solid var(--sidebar-border)",
+      }}
+    >
       {/* Logo */}
-      <div className="h-16 flex items-center px-5 gap-2.5"
-        style={{ borderBottom: "1px solid var(--border-subtle)" }}>
-        <div className="w-7 h-7 rounded-lg flex items-center justify-center" style={{ backgroundColor: "#0F766E" }}>
-          <Activity size={14} className="text-white" />
+      <div
+        className="h-16 flex items-center px-5 gap-3"
+        style={{ borderBottom: "1px solid var(--sidebar-border)" }}
+      >
+        <div
+          className="w-8 h-8 rounded-lg flex items-center justify-center shrink-0"
+          style={{ backgroundColor: "rgba(20, 184, 166, 0.25)" }}
+        >
+          <Activity size={15} style={{ color: "#5EEAD4" }} />
         </div>
         <div>
-          <span className="text-sm font-bold text-text-primary tracking-wide">RadSight</span>
-          <span className="block text-[10px] text-text-muted font-mono">v1.0 · AI Platform</span>
+          <span
+            className="text-sm font-bold tracking-wide"
+            style={{ color: "var(--sidebar-text-primary)" }}
+          >
+            RadSight
+          </span>
+          <span
+            className="block text-[10px] font-mono"
+            style={{ color: "var(--sidebar-text-muted)" }}
+          >
+            v1.0 · AI Platform
+          </span>
         </div>
       </div>
 
       {/* Navigation */}
       <nav className="flex-1 px-3 py-4 space-y-0.5">
-        <p className="text-[10px] uppercase tracking-widest text-text-muted px-2 mb-2">Navigation</p>
+        <p
+          className="text-[10px] uppercase tracking-widest px-3 mb-2"
+          style={{ color: "var(--sidebar-text-muted)" }}
+        >
+          Navigation
+        </p>
         {NAV_ITEMS.map(({ label, href, icon: Icon }) => {
           const active = pathname === href || (href !== "/dashboard" && pathname.startsWith(href));
           return (
-            <Link key={href} href={href}
-              className={cn(
-                "flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium transition-all group",
-                active
-                  ? "bg-accent-blue/10 text-accent-blue"
-                  : "text-text-secondary hover:text-text-primary hover:bg-surface"
-              )}>
+            <Link
+              key={href}
+              href={href}
+              className={cn("sidebar-item", active && "active")}
+            >
               <Icon size={15} />
               <span className="flex-1">{label}</span>
-              {active && <ChevronRight size={12} className="opacity-60" />}
+              {active && <ChevronRight size={11} style={{ opacity: 0.5 }} />}
             </Link>
           );
         })}
       </nav>
 
       {/* User section */}
-      <div className="px-3 py-4 space-y-0.5"
-        style={{ borderTop: "1px solid var(--border-subtle)" }}>
+      <div
+        className="px-3 py-4 space-y-0.5"
+        style={{ borderTop: "1px solid var(--sidebar-border)" }}
+      >
         <div className="flex items-center gap-3 px-3 py-2 mb-1">
-          <div className="w-7 h-7 rounded-full bg-accent-violet/20 flex items-center justify-center text-xs font-bold text-accent-violet">
+          <div
+            className="w-7 h-7 rounded-full flex items-center justify-center text-xs font-bold shrink-0"
+            style={{
+              backgroundColor: "rgba(20, 184, 166, 0.2)",
+              color: "#5EEAD4",
+            }}
+          >
             {user?.full_name?.[0] ?? "U"}
           </div>
           <div className="flex-1 min-w-0">
-            <p className="text-xs font-medium text-text-primary truncate">{user?.full_name ?? "User"}</p>
-            <p className="text-[10px] text-text-muted capitalize">{user?.role ?? "—"}</p>
+            <p
+              className="text-xs font-medium truncate"
+              style={{ color: "var(--sidebar-text-primary)" }}
+            >
+              {user?.full_name ?? "User"}
+            </p>
+            <p
+              className="text-[10px] capitalize"
+              style={{ color: "var(--sidebar-text-muted)" }}
+            >
+              {user?.role ?? "—"}
+            </p>
           </div>
         </div>
         <button
           onClick={handleLogout}
-          className="w-full flex items-center gap-3 px-3 py-2 rounded-lg text-sm text-text-secondary hover:text-rose-400 hover:bg-rose-400/5 transition-colors">
+          className="sidebar-item w-full hover:!text-rose-400 hover:!bg-rose-400/10"
+        >
           <LogOut size={14} />
           <span>Sign out</span>
         </button>
