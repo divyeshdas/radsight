@@ -6,7 +6,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import Image from "next/image";
-import { Aperture } from "lucide-react";
+import { Aperture, Eye, EyeOff } from "lucide-react";
 import { useAuthStore } from "@/store/auth";
 import { login } from "@/lib/auth";
 
@@ -38,6 +38,7 @@ export default function LoginPage() {
   const router = useRouter();
   const { setUser } = useAuthStore();
   const [error, setError] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
 
   const { register, handleSubmit, formState: { errors, isSubmitting } } = useForm<LoginForm>({
     resolver: zodResolver(schema),
@@ -167,20 +168,30 @@ export default function LoginPage() {
               <label className="text-base font-medium" style={{ color: "#222222" }}>
                 Password
               </label>
-              <input
-                type="password"
-                placeholder="••••••••"
-                autoComplete="current-password"
-                {...register("password")}
-                className="w-full rounded-lg px-4 py-3 text-base outline-none transition-colors"
-                style={{
-                  backgroundColor: "#F7FBF7",
-                  border: "1px solid #A5D6A7",
-                  color: "#111111",
-                }}
-                onFocus={(e) => (e.target.style.borderColor = "#2E7D32")}
-                onBlur={(e) => (e.target.style.borderColor = "#A5D6A7")}
-              />
+              <div className="relative">
+                <input
+                  type={showPassword ? "text" : "password"}
+                  placeholder="••••••••"
+                  autoComplete="current-password"
+                  {...register("password")}
+                  className="w-full rounded-lg px-4 py-3 pr-12 text-base outline-none transition-colors"
+                  style={{
+                    backgroundColor: "#F7FBF7",
+                    border: "1px solid #A5D6A7",
+                    color: "#111111",
+                  }}
+                  onFocus={(e) => (e.target.style.borderColor = "#0F766E")}
+                  onBlur={(e) => (e.target.style.borderColor = "#A5D6A7")}
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowPassword((v) => !v)}
+                  className="absolute right-3 top-1/2 -translate-y-1/2 p-1 rounded transition-opacity hover:opacity-70"
+                  style={{ color: "#7AADA6" }}
+                >
+                  {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+                </button>
+              </div>
               {errors.password && (
                 <p className="text-sm" style={{ color: "#C62828" }}>{errors.password.message}</p>
               )}

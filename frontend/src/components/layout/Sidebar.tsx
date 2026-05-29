@@ -36,7 +36,7 @@ export function Sidebar() {
       {/* Logo */}
       <div className="h-16 flex items-center px-5 gap-2.5"
         style={{ borderBottom: "1px solid var(--border-subtle)" }}>
-        <div className="w-7 h-7 rounded-lg bg-accent-blue flex items-center justify-center">
+        <div className="w-7 h-7 rounded-lg flex items-center justify-center" style={{ backgroundColor: "#0F766E" }}>
           <Activity size={14} className="text-white" />
         </div>
         <div>
