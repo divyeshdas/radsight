@@ -10,7 +10,7 @@ export const metadata: Metadata = {
 
 const themeScript = `
   (function() {
-    var theme = localStorage.getItem('radsight-theme') || 'dark';
+    var theme = localStorage.getItem('radsight-theme') || 'light';
     document.documentElement.setAttribute('data-theme', theme);
   })();
 `;

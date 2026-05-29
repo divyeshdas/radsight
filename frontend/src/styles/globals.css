@@ -59,19 +59,20 @@
   --scrollbar-thumb: #CBD5E1;
 }
 
-/* ─── Dark mode ──────────────────────────────────────────────────────────────── */
+/* ─── Dark mode (WellSpring — dark sidebar, white content) ───────────────────── */
 [data-theme="dark"] {
-  --bg-primary: #0B1220;
-  --bg-surface: #111827;
-  --bg-panel: #111827;
-  --bg-elevated: #1F2937;
-  --border-color: #1F2937;
-  --border-subtle: #1A2333;
+  /* Content stays light — same as light mode */
+  --bg-primary: #F8FAFC;
+  --bg-surface: #FFFFFF;
+  --bg-panel: #FFFFFF;
+  --bg-elevated: #FFFFFF;
+  --border-color: #E2E8F0;
+  --border-subtle: #F1F5F9;
 
-  --text-primary: #F8FAFC;
-  --text-secondary: #94A3B8;
-  --text-muted: #64748B;
-  --text-inverse: #0B1220;
+  --text-primary: #0F172A;
+  --text-secondary: #64748B;
+  --text-muted: #94A3B8;
+  --text-inverse: #F8FAFC;
 
   --accent-blue: #3B82F6;
   --accent-cyan: #22D3EE;
@@ -86,31 +87,32 @@
   --severity-high: #F97316;
   --severity-critical: #EF4444;
 
+  /* Sidebar — dark navy (WellSpring style) */
   --sidebar-bg: #0B1220;
   --sidebar-text-primary: #F8FAFC;
   --sidebar-text-secondary: rgba(248, 250, 252, 0.6);
   --sidebar-text-muted: rgba(248, 250, 252, 0.38);
-  --sidebar-border: #1F2937;
-  --sidebar-item-active: rgba(59, 130, 246, 0.15);
-  --sidebar-item-hover: rgba(59, 130, 246, 0.08);
+  --sidebar-border: rgba(255, 255, 255, 0.07);
+  --sidebar-item-active: rgba(59, 130, 246, 0.2);
+  --sidebar-item-hover: rgba(59, 130, 246, 0.1);
   --sidebar-active-text: #93C5FD;
-  --sidebar-logo-bg: rgba(59, 130, 246, 0.15);
+  --sidebar-logo-bg: rgba(59, 130, 246, 0.18);
   --sidebar-logo-icon: #93C5FD;
-  --sidebar-avatar-bg: rgba(59, 130, 246, 0.15);
+  --sidebar-avatar-bg: rgba(59, 130, 246, 0.18);
   --sidebar-avatar-text: #93C5FD;
 
-  --glass-bg: rgba(17, 24, 39, 0.8);
-  --glass-border: rgba(59, 130, 246, 0.2);
-  --card-bg: rgba(31, 41, 55, 0.8);
-  --card-border: rgba(59, 130, 246, 0.15);
+  --glass-bg: rgba(248, 250, 252, 0.9);
+  --glass-border: rgba(59, 130, 246, 0.15);
+  --card-bg: rgba(255, 255, 255, 0.95);
+  --card-border: rgba(59, 130, 246, 0.1);
 
-  --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.4);
-  --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.5);
-  --shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.6);
-  --card-shadow: 0 1px 3px rgba(0, 0, 0, 0.3), 0 4px 12px rgba(0, 0, 0, 0.2);
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.05);
+  --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.07);
+  --shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.09);
+  --card-shadow: 0 1px 3px rgba(0, 0, 0, 0.06), 0 4px 12px rgba(0, 0, 0, 0.04);
 
-  --scrollbar-track: #0B1220;
-  --scrollbar-thumb: #1F2937;
+  --scrollbar-track: #F1F5F9;
+  --scrollbar-thumb: #CBD5E1;
 }
 
 /* ─── Base ──────────────────────────────────────────────────────────────────── */
