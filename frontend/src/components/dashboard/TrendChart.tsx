@@ -63,14 +63,14 @@ export function TrendChart({ data, title = "Daily Report Volume" }: TrendChartPr
         data: totals,
         smooth: true,
         symbol: "none",
-        lineStyle: { color: "#14B8A6", width: 2 },
-        itemStyle: { color: "#14B8A6" },
+        lineStyle: { color: "#3B82F6", width: 2 },
+        itemStyle: { color: "#3B82F6" },
         areaStyle: {
           color: {
             type: "linear", x: 0, y: 0, x2: 0, y2: 1,
             colorStops: [
-              { offset: 0, color: "#14B8A630" },
-              { offset: 1, color: "#14B8A605" },
+              { offset: 0, color: "#3B82F630" },
+              { offset: 1, color: "#3B82F605" },
             ],
           },
         },
@@ -81,9 +81,9 @@ export function TrendChart({ data, title = "Daily Report Volume" }: TrendChartPr
         data: ma,
         smooth: true,
         connectNulls: true,
-        lineStyle: { color: "#0F766E", width: 1.5, type: "dashed" },
+        lineStyle: { color: "#2563EB", width: 1.5, type: "dashed" },
         symbol: "none",
-        itemStyle: { color: "#0F766E" },
+        itemStyle: { color: "#2563EB" },
       },
       {
         name: "Critical",

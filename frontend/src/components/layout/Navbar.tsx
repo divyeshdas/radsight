@@ -31,8 +31,8 @@ export function Navbar({ title, subtitle, onKPIUpdate }: NavbarProps) {
         borderBottom: "1px solid var(--border-color)",
       }}>
       <div>
-        <h1 className="text-sm font-semibold text-text-primary">{title}</h1>
-        {subtitle && <p className="text-xs text-text-muted mt-0.5">{subtitle}</p>}
+        <h1 className="text-text-primary" style={{ fontSize: 20, fontWeight: 700, lineHeight: 1.2 }}>{title}</h1>
+        {subtitle && <p className="text-text-muted mt-0.5" style={{ fontSize: 12, fontWeight: 400 }}>{subtitle}</p>}
       </div>
 
       <div className="flex items-center gap-3">

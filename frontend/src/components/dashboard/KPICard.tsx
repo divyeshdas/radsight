@@ -30,7 +30,8 @@ export function KPICard({ title, value, change, icon: Icon, accent = "#0EA5E9", 
         style={{ backgroundColor: accent }} />
 
       <div className="flex items-start justify-between mb-3">
-        <p className="text-xs font-medium text-text-secondary uppercase tracking-wider">{title}</p>
+        <p className="font-medium text-text-secondary uppercase tracking-wider"
+          style={{ fontSize: 13, fontWeight: 500 }}>{title}</p>
         <div className="w-8 h-8 rounded-lg flex items-center justify-center"
           style={{ backgroundColor: `${accent}18`, border: `1px solid ${accent}25` }}>
           <Icon size={14} style={{ color: accent }} />
@@ -38,12 +39,13 @@ export function KPICard({ title, value, change, icon: Icon, accent = "#0EA5E9", 
       </div>
 
       <div className="flex items-end gap-2">
-        <span className={cn("text-2xl font-bold text-text-primary", mono && "font-mono")}>
+        <span className={cn("font-bold text-text-primary", mono && "font-mono")}
+          style={{ fontSize: 28, fontWeight: 700, lineHeight: 1 }}>
           {typeof value === "number" ? formatNumber(value) : value}
-          {suffix && <span className="text-sm font-normal text-text-muted ml-1">{suffix}</span>}
+          {suffix && <span className="font-normal text-text-muted ml-1" style={{ fontSize: 14 }}>{suffix}</span>}
         </span>
         {change !== undefined && (
-          <span className="text-xs font-medium mb-0.5" style={{ color: changeColor }}>
+          <span className="font-medium mb-0.5" style={{ fontSize: 12, color: changeColor }}>
             {change > 0 ? "↑" : change < 0 ? "↓" : "—"} {Math.abs(change).toFixed(1)}%
           </span>
         )}

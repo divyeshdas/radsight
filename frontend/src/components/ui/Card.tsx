@@ -33,7 +33,8 @@ export function CardHeader({ children, className }: { children: React.ReactNode;
 
 export function CardTitle({ children, className }: { children: React.ReactNode; className?: string }) {
   return (
-    <h3 className={cn("text-sm font-semibold text-text-secondary uppercase tracking-wider", className)}>
+    <h3 className={cn("font-semibold text-text-secondary uppercase tracking-wider", className)}
+      style={{ fontSize: 13, fontWeight: 600, letterSpacing: "0.06em" }}>
       {children}
     </h3>
   );

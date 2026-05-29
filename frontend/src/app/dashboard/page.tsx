@@ -53,19 +53,19 @@ export default function DashboardPage() {
             ? Array.from({ length: 6 }).map((_, i) => <KPICardSkeleton key={i} />)
             : <>
               <KPICard title="Total Reports" value={activeKPIs?.total_reports ?? 0}
-                icon={FileText} accent="#0F766E" index={0} />
+                icon={FileText} accent="#2563EB" index={0} />
               <KPICard title="Today" value={activeKPIs?.reports_today ?? 0}
-                icon={Activity} accent="#14B8A6" index={1} />
+                icon={Activity} accent="#06B6D4" index={1} />
               <KPICard title="Critical Cases" value={activeKPIs?.critical_cases ?? 0}
                 icon={AlertTriangle} accent="#EF4444" index={2} />
               <KPICard title="Flagged" value={activeKPIs?.flagged_for_review ?? 0}
                 icon={Flag} accent="#F97316" index={3} />
               <KPICard title="Avg Risk Score"
                 value={((activeKPIs?.avg_risk_score ?? 0) * 100).toFixed(1)}
-                suffix="%" icon={TrendingUp} accent="#22C55E" mono index={4} />
+                suffix="%" icon={TrendingUp} accent="#10B981" mono index={4} />
               <KPICard title="Avg Processing"
                 value={formatMs(activeKPIs?.avg_processing_ms ?? 0)}
-                icon={Clock} accent="#14B8A6" mono index={5} />
+                icon={Clock} accent="#8B5CF6" mono index={5} />
             </>
           }
         </div>
