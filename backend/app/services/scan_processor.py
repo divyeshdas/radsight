@@ -58,7 +58,7 @@ _VISION_PROMPT = (
     '"confidence":0.0}'
 )
 
-_GEMINI_MODEL = "gemini-2.0-flash"
+_GEMINI_MODEL = "gemini-1.5-flash"
 
 
 def extract_text_from_pdf(content: bytes) -> str:
@@ -212,22 +212,29 @@ def _analyze_image_with_gemini(content: bytes, ext: str) -> dict:
     media_type = _IMAGE_MEDIA_TYPES.get(ext, "image/jpeg")
     client = genai.Client(api_key=os.environ["GEMINI_API_KEY"])
 
-    response = client.models.generate_content(
-        model=_GEMINI_MODEL,
-        contents=[
-            types.Part.from_bytes(data=content, mime_type=media_type),
-            _VISION_PROMPT,
-        ],
-    )
+    last_err = None
+    for attempt in range(3):
+        try:
+            response = client.models.generate_content(
+                model=_GEMINI_MODEL,
+                contents=[
+                    types.Part.from_bytes(data=content, mime_type=media_type),
+                    _VISION_PROMPT,
+                ],
+            )
+            raw = response.text.strip()
+            if "```" in raw:
+                raw = raw.split("```")[1]
+                if raw.startswith("json"):
+                    raw = raw[4:]
+                raw = raw.split("```")[0].strip()
+            return json.loads(raw)
+        except Exception as e:
+            last_err = e
+            if attempt < 2:
+                time.sleep(2 ** attempt)  # 1s, 2s backoff
 
-    raw = response.text.strip()
-    if "```" in raw:
-        raw = raw.split("```")[1]
-        if raw.startswith("json"):
-            raw = raw[4:]
-        raw = raw.split("```")[0].strip()
-
-    return json.loads(raw)
+    raise last_err
 
 
 def process_upload(content: bytes, ext: str, filename: str = "") -> dict:
