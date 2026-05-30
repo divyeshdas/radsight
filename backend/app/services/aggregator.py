@@ -84,7 +84,7 @@ async def get_disease_prevalence(
             "$match": {
                 "tags": {
                     "$nin": [
-                        "normal", "mild", "moderate", "severe", "critical",
+                        "normal", "low", "mild", "moderate", "high", "severe", "critical",
                         "cardiovascular-pulmonary", "pleural", "infectious",
                         "neoplastic", "cardiac", "pulmonary", "traumatic",
                     ]
