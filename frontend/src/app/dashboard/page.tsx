@@ -62,10 +62,10 @@ export default function DashboardPage() {
                 icon={Flag} accent="#F97316" index={3} />
               <KPICard title="Avg Risk Score"
                 value={((activeKPIs?.avg_risk_score ?? 0) * 100).toFixed(1)}
-                suffix="%" icon={TrendingUp} accent="#10B981" mono index={4} />
+                suffix="%" icon={TrendingUp} accent="#10B981" index={4} />
               <KPICard title="Avg Processing"
                 value={formatMs(activeKPIs?.avg_processing_ms ?? 0)}
-                icon={Clock} accent="#8B5CF6" mono index={5} />
+                icon={Clock} accent="#8B5CF6" index={5} />
             </>
           }
         </div>
