@@ -1,17 +1,19 @@
-from typing import Annotated
-from fastapi import Depends, HTTPException, status
+from typing import Annotated, Optional
+from fastapi import Depends
 from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
 from app.core.security import decode_token
 from app.core.exceptions import UnauthorizedError, ForbiddenError
 from app.db.mongodb import get_collection
 from app.models.user import User, UserRole
 
-bearer_scheme = HTTPBearer()
+bearer_scheme = HTTPBearer(auto_error=False)
 
 
 async def get_current_user(
-    credentials: Annotated[HTTPAuthorizationCredentials, Depends(bearer_scheme)],
+    credentials: Annotated[Optional[HTTPAuthorizationCredentials], Depends(bearer_scheme)],
 ) -> User:
+    if not credentials:
+        raise UnauthorizedError("Authentication required")
     payload = decode_token(credentials.credentials)
 
     if payload.get("type") != "access":

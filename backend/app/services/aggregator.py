@@ -91,12 +91,27 @@ async def get_disease_prevalence(
                 }
             }
         },
-        {"$group": {"_id": "$tags", "count": {"$sum": 1}}},
-        {"$sort": {"count": -1}},
+        {
+            "$group": {
+                "_id": "$tags",
+                "total": {"$sum": 1},
+                "critical": {"$sum": {"$cond": [{"$eq": ["$severity", "critical"]}, 1, 0]}},
+                "avg_risk": {"$avg": "$risk_score"},
+            }
+        },
+        {"$sort": {"total": -1}},
         {"$limit": limit},
     ]
     result = await db["reports"].aggregate(pipeline).to_list(limit)
-    return [{"disease": r["_id"], "count": r["count"]} for r in result]
+    return [
+        {
+            "disease": r["_id"],
+            "total": r["total"],
+            "critical": r["critical"],
+            "avg_risk": round(float(r.get("avg_risk") or 0), 4),
+        }
+        for r in result
+    ]
 
 
 async def get_daily_report_counts(
@@ -191,6 +206,43 @@ async def get_processing_metrics(
     }
 
 
+async def get_daily_processing_stats(
+    db: motor.motor_asyncio.AsyncIOMotorDatabase,
+    days: int = 30,
+) -> List[Dict]:
+    since = datetime.now(timezone.utc) - timedelta(days=days)
+    pipeline = [
+        {
+            "$match": {
+                "created_at": {"$gte": since},
+                "status": "completed",
+                "processing_time_ms": {"$ne": None},
+            }
+        },
+        {
+            "$group": {
+                "_id": {"$dateToString": {"format": "%Y-%m-%d", "date": "$created_at"}},
+                "avg_ms": {"$avg": "$processing_time_ms"},
+                "values": {"$push": "$processing_time_ms"},
+            }
+        },
+        {"$sort": {"_id": 1}},
+    ]
+    result = await db["reports"].aggregate(pipeline).to_list(days + 5)
+
+    rows = []
+    for r in result:
+        import numpy as np
+        vals = [v for v in r.get("values", []) if v is not None]
+        p95 = round(float(np.percentile(vals, 95)), 1) if vals else 0
+        rows.append({
+            "date": r["_id"],
+            "avg_ms": round(float(r.get("avg_ms") or 0), 1),
+            "p95_ms": p95,
+        })
+    return rows
+
+
 async def get_confidence_distribution(
     db: motor.motor_asyncio.AsyncIOMotorDatabase,
     days: int = 30,
@@ -210,7 +262,7 @@ async def get_confidence_distribution(
     ]
     result = await db["reports"].aggregate(pipeline).to_list(buckets + 2)
     return [
-        {"range": f"{r['_id']:.1f}–{r['_id'] + 0.1:.1f}", "count": r["count"]}
+        {"bucket": f"{r['_id']:.1f}–{r['_id'] + 0.1:.1f}", "count": r["count"]}
         for r in result
         if isinstance(r.get("_id"), (int, float))
     ]

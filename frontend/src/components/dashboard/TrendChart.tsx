@@ -5,8 +5,8 @@ import { Card, CardHeader, CardTitle } from "@/components/ui/Card";
 
 interface TrendRow {
   date: string;
-  total_reports: number;
-  ma_total?: number | null;
+  count: number;
+  sma7?: number | null;
   critical_count?: number;
 }
 
@@ -17,8 +17,8 @@ interface TrendChartProps {
 
 export function TrendChart({ data, title = "Daily Report Volume" }: TrendChartProps) {
   const dates = data.map((d) => d.date);
-  const totals = data.map((d) => d.total_reports);
-  const ma = data.map((d) => d.ma_total ?? null);
+  const totals = data.map((d) => d.count);
+  const ma = data.map((d) => d.sma7 ?? null);
   const critical = data.map((d) => d.critical_count ?? 0);
 
   const option = {

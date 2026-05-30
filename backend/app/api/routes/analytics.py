@@ -9,6 +9,9 @@ from app.services.aggregator import (
     get_severity_distribution,
     get_disease_prevalence,
     get_daily_report_counts,
+    get_processing_metrics,
+    get_confidence_distribution,
+    get_daily_processing_stats,
 )
 
 router = APIRouter(prefix="/analytics", tags=["analytics"])
@@ -49,18 +52,18 @@ async def trends(current_user: CurrentUser, days: int = Query(90), window: int =
     if not daily:
         return {"trend_data": [], "direction": "insufficient_data", "current_velocity": 0}
 
-    df = pd.DataFrame(daily).sort_values("date")
+    df = pd.DataFrame(daily).sort_values("date").reset_index(drop=True)
     dates = df["date"].tolist()
-    total_series = df.get("total_reports", pd.Series([0] * len(df))).fillna(0).tolist()
-    critical_series = [r.get("critical_count", 0) for r in daily]
+    total_series = df["total_reports"].fillna(0).tolist() if "total_reports" in df.columns else [0] * len(df)
+    critical_series = df["critical_count"].fillna(0).astype(int).tolist() if "critical_count" in df.columns else [0] * len(df)
 
     ma_total = _moving_average(total_series, window)
 
     trend_rows = [
         {
             "date": dates[i],
-            "total_reports": total_series[i],
-            "ma_total": ma_total[i],
+            "count": int(total_series[i]),
+            "sma7": ma_total[i],
             "critical_count": critical_series[i],
         }
         for i in range(len(dates))
@@ -95,10 +98,11 @@ async def forecast(
         noise = float(np.random.normal(0, std * 0.3))
         fc = max(0.0, avg + noise)
         result.append({
-            "date": d.strftime("%Y-%m-%d"),
-            "forecast": round(fc, 1),
-            "lower": round(max(0.0, fc - std), 1),
-            "upper": round(fc + std, 1),
+            "ds": d.strftime("%Y-%m-%d"),
+            "yhat": round(fc, 1),
+            "yhat_lower": round(max(0.0, fc - std), 1),
+            "yhat_upper": round(fc + std, 1),
+            "trend": round(avg, 1),
         })
     return {"forecast": result}
 
@@ -109,10 +113,28 @@ async def anomalies(current_user: CurrentUser, days: int = Query(90)):
 
 
 @router.get("/processing")
-async def processing(current_user: CurrentUser, hours: int = Query(24)):
-    return {}
+async def processing(
+    current_user: CurrentUser,
+    days: int = Query(30),
+):
+    db = get_database()
+    hours = days * 24
+    metrics = await get_processing_metrics(db, hours=hours)
+    daily = await get_daily_processing_stats(db, days=days)
+
+    summary = {
+        "total_processed": metrics.get("completed", 0),
+        "success_rate_pct": metrics.get("success_rate_pct", 0.0),
+        "avg_ms": metrics.get("avg_processing_ms", 0.0),
+        "p95_ms": metrics.get("p95_processing_ms", 0.0),
+        "failure_count": metrics.get("failed", 0),
+    }
+
+    return {"summary": summary, "latency_by_day": daily}
 
 
 @router.get("/confidence")
 async def confidence(current_user: CurrentUser, days: int = Query(30)):
-    return []
+    db = get_database()
+    data = await get_confidence_distribution(db, days=days)
+    return {"distribution": data}

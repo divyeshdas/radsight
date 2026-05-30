@@ -22,9 +22,10 @@ api.interceptors.request.use((config: InternalAxiosRequestConfig) => {
 api.interceptors.response.use(
   (res) => res,
   async (error: AxiosError) => {
-    if (error.response?.status === 401) {
+    const status = error.response?.status;
+    if (status === 401 || status === 403) {
       const refresh = typeof window !== "undefined" ? localStorage.getItem("radsight_refresh_token") : null;
-      if (refresh) {
+      if (refresh && !error.config?.url?.includes("/auth/refresh")) {
         try {
           const res = await axios.post(`${BASE_URL}/api/v1/auth/refresh`, { refresh_token: refresh });
           const { access_token, refresh_token } = res.data;
@@ -39,6 +40,8 @@ api.interceptors.response.use(
           localStorage.removeItem("radsight_refresh_token");
           window.location.href = "/login";
         }
+      } else if (!refresh) {
+        window.location.href = "/login";
       }
     }
     return Promise.reject(error);

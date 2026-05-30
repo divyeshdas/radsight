@@ -18,32 +18,34 @@ async def create_report(
     institution: Optional[str] = None,
     radiologist_id: Optional[str] = None,
     metadata: dict | None = None,
+    analysis: dict | None = None,
 ) -> RadiologyReport:
     collection = get_collection("reports")
     now = datetime.now(timezone.utc)
+    a = analysis or {}
 
     doc = {
         "patient_id": patient_id,
         "report_type": report_type,
         "source": source,
-        "status": ReportStatus.pending,
+        "status": a.get("status", ReportStatus.pending),
         "raw_text": raw_text,
-        "cleaned_text": None,
-        "word_count": len(raw_text.split()),
-        "severity": None,
-        "risk_score": None,
-        "classification_confidence": None,
-        "ai_summary": None,
-        "findings_count": 0,
-        "has_critical_findings": False,
-        "flagged_for_review": False,
+        "cleaned_text": a.get("cleaned_text"),
+        "word_count": a.get("word_count", len(raw_text.split())),
+        "severity": a.get("severity"),
+        "risk_score": a.get("risk_score"),
+        "classification_confidence": a.get("classification_confidence"),
+        "ai_summary": a.get("ai_summary"),
+        "findings_count": a.get("findings_count", 0),
+        "has_critical_findings": a.get("has_critical_findings", False),
+        "flagged_for_review": a.get("flagged_for_review", False),
         "modality": None,
         "body_region": None,
         "institution": institution,
         "radiologist_id": radiologist_id,
-        "processing_time_ms": None,
+        "processing_time_ms": a.get("processing_time_ms"),
         "ocr_confidence": None,
-        "tags": [],
+        "tags": a.get("tags", []),
         "metadata": metadata or {},
         "created_at": now,
         "updated_at": now,
@@ -69,6 +71,14 @@ async def get_report(report_id: str) -> RadiologyReport:
     report = RadiologyReport(**{**doc, "_id": str(doc["_id"])})
     await cache_set(cache_key, report.model_dump(mode="json"), ttl=300)
     return report
+
+
+_MODALITY_TO_REPORT_TYPE = {
+    "CT": "ct_scan",
+    "X-Ray": "chest_xray",
+    "MRI": "mri",
+    "Ultrasound": "ultrasound",
+}
 
 
 async def list_reports(
@@ -99,7 +109,18 @@ async def list_reports(
     cursor = collection.find(query, projection).sort("created_at", -1).skip(skip).limit(limit)
     docs = await cursor.to_list(length=limit)
 
-    reports = [RadiologyReport(**{**d, "_id": str(d["_id"]), "raw_text": "", "cleaned_text": None}) for d in docs]
+    reports = []
+    for d in docs:
+        try:
+            modality = d.get("modality", "")
+            inferred_type = d.get("report_type") or _MODALITY_TO_REPORT_TYPE.get(modality, "chest_xray")
+            report = RadiologyReport(
+                **{**d, "_id": str(d["_id"]), "raw_text": "", "cleaned_text": None, "report_type": inferred_type}
+            )
+            reports.append(report)
+        except Exception as exc:
+            logger.warning("Skipping malformed report", doc_id=str(d.get("_id")), error=str(exc))
+
     return reports, total
 
 

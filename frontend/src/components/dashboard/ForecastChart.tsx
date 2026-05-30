@@ -4,16 +4,16 @@ import ReactECharts from "echarts-for-react";
 import { Card, CardHeader, CardTitle } from "@/components/ui/Card";
 
 interface ForecastRow {
-  date: string;
-  forecast: number;
-  lower: number;
-  upper: number;
+  ds: string;
+  yhat: number;
+  yhat_lower: number;
+  yhat_upper: number;
 }
 
 export function ForecastChart({ data }: { data: ForecastRow[] }) {
-  const dates = data.map((d) => d.date);
-  const forecasts = data.map((d) => d.forecast);
-  const bands = data.map((d) => [d.lower, d.upper]);
+  const dates = data.map((d) => d.ds);
+  const forecasts = data.map((d) => d.yhat);
+  const bands = data.map((d) => [d.yhat_lower, d.yhat_upper]);
 
   const option = {
     backgroundColor: "transparent",
@@ -62,7 +62,7 @@ export function ForecastChart({ data }: { data: ForecastRow[] }) {
       {
         name: "CI Lower",
         type: "line",
-        data: data.map((d) => d.lower),
+        data: data.map((d) => d.yhat_lower),
         lineStyle: { opacity: 0 },
         stack: "ci",
         symbol: "none",
@@ -71,7 +71,7 @@ export function ForecastChart({ data }: { data: ForecastRow[] }) {
       {
         name: "CI Band",
         type: "line",
-        data: data.map((d) => d.upper - d.lower),
+        data: data.map((d) => d.yhat_upper - d.yhat_lower),
         lineStyle: { opacity: 0 },
         stack: "ci",
         symbol: "none",

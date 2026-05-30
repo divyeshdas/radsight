@@ -5,17 +5,18 @@ import { usePathname } from "next/navigation";
 import { cn } from "@/lib/utils";
 import {
   LayoutDashboard, FileText, Search, BarChart3,
-  Activity, LogOut, ChevronRight,
+  Activity, LogOut, ChevronRight, FileScan,
 } from "lucide-react";
 import { useAuthStore } from "@/store/auth";
 import { logout } from "@/lib/auth";
 import { useRouter } from "next/navigation";
 
 const NAV_ITEMS = [
-  { label: "Dashboard",  href: "/dashboard",           icon: LayoutDashboard },
-  { label: "Reports",    href: "/dashboard/reports",   icon: FileText },
-  { label: "Search",     href: "/dashboard/search",    icon: Search },
-  { label: "Analytics",  href: "/dashboard/analytics", icon: BarChart3 },
+  { label: "Dashboard",   href: "/dashboard",           icon: LayoutDashboard },
+  { label: "Reports",     href: "/dashboard/reports",   icon: FileText },
+  { label: "Upload Scan", href: "/dashboard/scan",      icon: FileScan },
+  { label: "Search",      href: "/dashboard/search",    icon: Search },
+  { label: "Analytics",   href: "/dashboard/analytics", icon: BarChart3 },
 ];
 
 export function Sidebar() {

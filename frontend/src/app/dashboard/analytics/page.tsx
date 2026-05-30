@@ -409,13 +409,13 @@ export default function AnalyticsPage() {
     "/analytics/anomalies", fetcher, { refreshInterval: 60000 }
   );
   const { data: diseases, isLoading: diseasesLoading } = useSWR(
-    "/analytics/diseases", fetcher, { refreshInterval: 120000 }
+    `/analytics/diseases?days=${days}`, fetcher, { refreshInterval: 120000 }
   );
   const { data: confidence, isLoading: confLoading } = useSWR(
-    "/analytics/confidence", fetcher, { refreshInterval: 120000 }
+    `/analytics/confidence?days=${days}`, fetcher, { refreshInterval: 120000 }
   );
   const { data: processing, isLoading: procLoading } = useSWR(
-    "/analytics/processing", fetcher, { refreshInterval: 120000 }
+    `/analytics/processing?days=${days}`, fetcher, { refreshInterval: 120000 }
   );
 
   const trendData: { date: string; count: number; sma7: number }[] = trends?.trend_data ?? [];

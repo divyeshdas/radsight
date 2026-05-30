@@ -24,9 +24,8 @@ class PaginatedReports(BaseModel):
     pages: int
 
 
-@router.post("/upload", response_model=RadiologyReport, status_code=201)
+@router.post("/upload", response_model=RadiologyReport, status_code=201, response_model_by_alias=False)
 async def upload_report(
-    background_tasks: BackgroundTasks,
     current_user: CurrentUser,
     file: UploadFile = File(...),
     patient_id: str = Form(...),
@@ -41,23 +40,19 @@ async def upload_report(
     if len(content) > settings.max_upload_size_mb * 1024 * 1024:
         raise ProcessingError(f"File exceeds {settings.max_upload_size_mb}MB limit")
 
-    raw_text = content.decode("utf-8", errors="ignore") if ext == "txt" else ""
+    from app.services.scan_processor import process_upload
+    analysis = process_upload(content, ext, file.filename or "")
 
     report = await create_report(
         patient_id=patient_id,
-        raw_text=raw_text,
+        raw_text=analysis.pop("raw_text", ""),
         report_type=report_type,
         source="upload",
         institution=institution,
         radiologist_id=str(current_user.id),
         metadata={"original_filename": file.filename, "file_size_bytes": len(content)},
+        analysis=analysis,
     )
-
-    if ext != "txt":
-        background_tasks.add_task(_trigger_ocr_processing, str(report.id), content, ext)
-    else:
-        background_tasks.add_task(_trigger_nlp_processing, str(report.id))
-
     return report
 
 
@@ -82,7 +77,7 @@ async def ingest_text_report(
     return report
 
 
-@router.get("/", response_model=PaginatedReports)
+@router.get("/", response_model=PaginatedReports, response_model_by_alias=False)
 async def list_reports_endpoint(
     current_user: CurrentUser,
     patient_id: Optional[str] = Query(None),
