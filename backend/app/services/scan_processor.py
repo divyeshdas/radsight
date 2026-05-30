@@ -58,7 +58,7 @@ _VISION_PROMPT = (
     '"confidence":0.0}'
 )
 
-_GEMINI_MODEL = "gemini-1.5-flash"
+_GEMINI_MODEL = "gemini-2.0-flash"
 
 
 def extract_text_from_pdf(content: bytes) -> str:
@@ -232,7 +232,7 @@ def _analyze_image_with_gemini(content: bytes, ext: str) -> dict:
         except Exception as e:
             last_err = e
             if attempt < 2:
-                time.sleep(2 ** attempt)  # 1s, 2s backoff
+                time.sleep(5 * (attempt + 1))  # 5s, 10s backoff
 
     raise last_err
 
