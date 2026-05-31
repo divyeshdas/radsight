@@ -74,7 +74,21 @@ app.include_router(analytics.router, prefix="/api/v1")
 
 @app.get("/health", tags=["system"])
 async def health_check():
-    return {"status": "healthy", "version": settings.app_version, "env": settings.app_env}
+    from app.db.mongodb import get_database
+    try:
+        db = get_database()
+        report_count = await db["reports"].count_documents({})
+        db_status = "ok"
+    except Exception as e:
+        report_count = -1
+        db_status = str(e)
+    return {
+        "status": "healthy",
+        "version": settings.app_version,
+        "env": settings.app_env,
+        "db": db_status,
+        "reports_in_db": report_count,
+    }
 
 
 @app.get("/", tags=["system"])
