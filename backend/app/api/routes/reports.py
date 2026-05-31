@@ -88,53 +88,69 @@ async def list_reports_endpoint(
     page: int = Query(1, ge=1),
     page_size: int = Query(20, ge=1, le=100),
 ):
+    try:
+        from app.db.mongodb import get_database
+        db = get_database()
+        collection = db["reports"]
+
+        query: dict = {}
+        if patient_id:
+            query["patient_id"] = {"$regex": patient_id.strip(), "$options": "i"}
+        if severity:
+            query["severity"] = str(severity)
+        if status:
+            query["status"] = str(status)
+        if report_type:
+            query["report_type"] = str(report_type)
+        if flagged is not None:
+            query["flagged_for_review"] = flagged
+
+        total = await collection.count_documents(query)
+        skip = (page - 1) * page_size
+        projection = {"raw_text": 0, "cleaned_text": 0}
+        cursor = collection.find(query, projection).sort("created_at", -1).skip(skip).limit(page_size)
+        docs = await cursor.to_list(length=page_size)
+
+        items = []
+        for d in docs:
+            try:
+                created = d.get("created_at")
+                updated = d.get("updated_at")
+                items.append({
+                    "id": str(d["_id"]),
+                    "patient_id": str(d.get("patient_id") or ""),
+                    "report_type": str(d.get("report_type") or "chest_xray"),
+                    "status": str(d.get("status") or "completed"),
+                    "severity": d.get("severity"),
+                    "risk_score": d.get("risk_score"),
+                    "classification_confidence": d.get("classification_confidence"),
+                    "ai_summary": d.get("ai_summary"),
+                    "findings_count": int(d.get("findings_count") or 0),
+                    "has_critical_findings": bool(d.get("has_critical_findings")),
+                    "flagged_for_review": bool(d.get("flagged_for_review")),
+                    "processing_time_ms": d.get("processing_time_ms"),
+                    "tags": list(d.get("tags") or []),
+                    "institution": d.get("institution"),
+                    "created_at": created.isoformat() if hasattr(created, "isoformat") else str(created or ""),
+                    "updated_at": updated.isoformat() if hasattr(updated, "isoformat") else str(updated or ""),
+                })
+            except Exception as row_err:
+                logger.warning("Skipping report row", error=str(row_err))
+
+        pages = -(-total // page_size) if total else 0
+        return {"items": items, "total": total, "page": page, "page_size": page_size, "pages": pages}
+    except Exception as err:
+        logger.error("list_reports failed", error=str(err))
+        from fastapi.responses import JSONResponse
+        return JSONResponse(status_code=500, content={"detail": str(err), "items": [], "total": 0, "page": page, "page_size": page_size, "pages": 0})
+
+
+@router.get("/count")
+async def report_count(current_user: CurrentUser):
     from app.db.mongodb import get_database
     db = get_database()
-    collection = db["reports"]
-
-    query: dict = {}
-    if patient_id:
-        query["patient_id"] = {"$regex": patient_id.strip(), "$options": "i"}
-    if severity:
-        query["severity"] = str(severity)
-    if status:
-        query["status"] = str(status)
-    if report_type:
-        query["report_type"] = str(report_type)
-    if flagged is not None:
-        query["flagged_for_review"] = flagged
-
-    total = await collection.count_documents(query)
-    skip = (page - 1) * page_size
-    projection = {"raw_text": 0, "cleaned_text": 0}
-    cursor = collection.find(query, projection).sort("created_at", -1).skip(skip).limit(page_size)
-    docs = await cursor.to_list(length=page_size)
-
-    items = []
-    for d in docs:
-        created = d.get("created_at")
-        updated = d.get("updated_at")
-        items.append({
-            "id": str(d["_id"]),
-            "patient_id": d.get("patient_id", ""),
-            "report_type": d.get("report_type", "chest_xray"),
-            "status": d.get("status", "completed"),
-            "severity": d.get("severity"),
-            "risk_score": d.get("risk_score"),
-            "classification_confidence": d.get("classification_confidence"),
-            "ai_summary": d.get("ai_summary"),
-            "findings_count": d.get("findings_count", 0),
-            "has_critical_findings": bool(d.get("has_critical_findings", False)),
-            "flagged_for_review": bool(d.get("flagged_for_review", False)),
-            "processing_time_ms": d.get("processing_time_ms"),
-            "tags": d.get("tags", []),
-            "institution": d.get("institution"),
-            "created_at": created.isoformat() if created else None,
-            "updated_at": updated.isoformat() if updated else None,
-        })
-
-    pages = -(-total // page_size) if total else 0
-    return {"items": items, "total": total, "page": page, "page_size": page_size, "pages": pages}
+    count = await db["reports"].count_documents({})
+    return {"count": count}
 
 
 @router.get("/stats")
