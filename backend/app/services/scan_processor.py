@@ -211,7 +211,7 @@ def _analyze_image_with_groq(content: bytes, ext: str) -> dict:
 
     media_type = _IMAGE_MEDIA_TYPES.get(ext, "image/jpeg")
     b64 = base64.standard_b64encode(content).decode("utf-8")
-    client = Groq(api_key=os.environ["GROQ_API_KEY"])
+    client = Groq(api_key=os.environ["Radsight"])
 
     response = client.chat.completions.create(
         model=_GROQ_MODEL,
@@ -254,7 +254,7 @@ def process_upload(content: bytes, ext: str, filename: str = "") -> dict:
         result["raw_text"] = text[:500] if text else f"[TXT: {filename}]"
 
     elif ext in _IMAGE_MEDIA_TYPES:
-        if os.environ.get("GROQ_API_KEY"):
+        if os.environ.get("Radsight"):
             try:
                 data = _analyze_image_with_groq(content, ext)
                 severity = data.get("severity", "normal")
