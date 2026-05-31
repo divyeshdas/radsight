@@ -437,12 +437,12 @@ export default function AnalyticsPage() {
       <div className="flex-1 p-6 space-y-6 max-w-screen-2xl mx-auto w-full">
 
         {/* Period selector */}
-        <div className="flex items-center gap-2">
-          <span className="text-xs text-text-muted">Lookback:</span>
+        <div className="flex items-center gap-3">
+          <span className="text-sm text-text-muted">Lookback:</span>
           {PERIOD_OPTIONS.map((opt) => (
             <button key={opt.value}
               onClick={() => setDays(opt.value)}
-              className="text-xs px-3 py-1.5 rounded-lg font-medium transition-colors"
+              className="text-sm px-5 py-2.5 rounded-lg font-medium transition-colors"
               style={{
                 background: days === opt.value ? "var(--accent-blue)" : "var(--bg-surface)",
                 color: days === opt.value ? "#fff" : "var(--text-muted)",
