@@ -61,7 +61,7 @@ _VISION_PROMPT = (
     '"confidence":0.0}'
 )
 
-_GROQ_MODEL = "meta-llama/llama-4-maverick-17b-128e-instruct"
+_GROQ_MODEL = "meta-llama/llama-4-scout-17b-16e-instruct"
 
 
 def extract_text_from_pdf(content: bytes) -> str:
