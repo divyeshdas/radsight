@@ -10,7 +10,11 @@ from app.core.logging import get_logger
 router = APIRouter(prefix="/search", tags=["search"])
 logger = get_logger(__name__)
 
-EXCLUDE_WORDS = {"the", "and", "for", "with", "from", "that", "this", "show", "find", "get"}
+EXCLUDE_WORDS = {
+    "the", "and", "for", "with", "from", "that", "this", "show", "find", "get",
+    "report", "reports", "findings", "case", "cases", "patient", "patients",
+    "all", "any", "are", "has", "have", "chest", "xray", "scan",
+}
 
 
 class SearchRequest(BaseModel):
@@ -58,19 +62,19 @@ async def _mongo_search(
         if len(w.strip()) > 2 and w.strip().lower() not in EXCLUDE_WORDS
     ]
 
-    conditions: list[dict] = []
+    word_conditions: list[dict] = []
     if words:
         for word in words:
-            conditions.append({
+            word_conditions.append({
                 "$or": [
                     {"tags": {"$regex": word, "$options": "i"}},
-                    {"findings": {"$regex": word, "$options": "i"}},
+                    {"ai_summary": {"$regex": word, "$options": "i"}},
                     {"severity": {"$regex": word, "$options": "i"}},
                     {"patient_id": {"$regex": word, "$options": "i"}},
                 ]
             })
 
-    mongo_query: dict = {"$and": conditions} if conditions else {}
+    mongo_query: dict = {"$or": word_conditions} if word_conditions else {}
     if severity_filter:
         mongo_query["severity"] = severity_filter
 
@@ -84,11 +88,12 @@ async def _mongo_search(
         findings = (d.get("findings") or d.get("ai_summary") or "").lower()
         severity_val = (d.get("severity") or "").lower()
 
+        ai_summary_val = (d.get("ai_summary") or "").lower()
         matched = 0
         for word in words:
             if any(word in t for t in tags):
                 matched += 2
-            if word in findings:
+            if word in findings or word in ai_summary_val:
                 matched += 1
             if word in severity_val:
                 matched += 1
