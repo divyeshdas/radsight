@@ -47,18 +47,21 @@ _IMAGE_MEDIA_TYPES = {
 }
 
 _VISION_PROMPT = (
-    "You are a radiology AI assistant. Analyze this medical scan image and identify any "
-    "pathological findings. Respond with ONLY a valid JSON object and absolutely nothing else — "
-    "no explanation, no markdown, no code fences:\n"
+    "You are an expert radiologist AI. Carefully examine every region of this chest X-ray image for abnormalities. "
+    "Look specifically for: pulmonary masses, nodules, lung carcinoma, consolidation, infiltrates, pleural effusion, "
+    "pneumothorax, cardiomegaly, mediastinal widening, hilar enlargement, atelectasis, fibrosis, emphysema, "
+    "rib fractures, and any asymmetry between lung fields. "
+    "Do NOT default to 'normal' unless the image is truly clear. Be thorough and report every visible abnormality. "
+    "Respond with ONLY a valid JSON object, no markdown, no explanation:\n"
     '{"severity":"normal|low|moderate|high|critical",'
     '"risk_score":0.0,'
     '"findings_count":0,'
-    '"conditions":["condition1"],'
-    '"summary":"brief radiological assessment in 1-2 sentences",'
+    '"conditions":["condition1","condition2"],'
+    '"summary":"detailed radiological assessment in 2-3 sentences describing all findings",'
     '"confidence":0.0}'
 )
 
-_GROQ_MODEL = "meta-llama/llama-4-scout-17b-16e-instruct"
+_GROQ_MODEL = "meta-llama/llama-4-maverick-17b-128e-instruct"
 
 
 def extract_text_from_pdf(content: bytes) -> str:
