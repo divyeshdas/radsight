@@ -27,17 +27,17 @@ export function Navbar({ title, subtitle, onKPIUpdate }: NavbarProps) {
   return (
     <header className="h-16 flex items-center justify-between px-6"
       style={{
-        backgroundColor: "var(--bg-surface)",
-        borderBottom: "1px solid var(--border-color)",
+        backgroundColor: "var(--navbar-bg)",
+        borderBottom: "1px solid var(--navbar-border)",
       }}>
       <div>
-        <h1 className="text-text-primary" style={{ fontSize: 20, fontWeight: 700, lineHeight: 1.2 }}>{title}</h1>
-        {subtitle && <p className="text-text-muted mt-0.5" style={{ fontSize: 12, fontWeight: 400 }}>{subtitle}</p>}
+        <h1 style={{ fontSize: 20, fontWeight: 700, lineHeight: 1.2, color: "var(--navbar-text-primary)" }}>{title}</h1>
+        {subtitle && <p style={{ fontSize: 12, fontWeight: 400, color: "var(--navbar-text-muted)", marginTop: 2 }}>{subtitle}</p>}
       </div>
 
       <div className="flex items-center gap-3">
         <div className="flex items-center gap-1.5 text-xs"
-          style={{ color: status === "connected" ? "var(--accent-emerald)" : "var(--text-muted)" }}>
+          style={{ color: status === "connected" ? "var(--accent-emerald)" : "var(--navbar-text-muted)" }}>
           {status === "connected"
             ? <Wifi size={12} />
             : <WifiOff size={12} />}
@@ -46,8 +46,9 @@ export function Navbar({ title, subtitle, onKPIUpdate }: NavbarProps) {
           </span>
         </div>
 
-        <button className="relative p-1.5 rounded-lg hover:bg-surface transition-colors">
-          <Bell size={15} className="text-text-secondary" />
+        <button className="relative p-1.5 rounded-lg transition-colors"
+          style={{ color: "var(--navbar-text-primary)" }}>
+          <Bell size={15} />
           {alerts > 0 && (
             <span className="absolute top-0.5 right-0.5 w-3.5 h-3.5 bg-rose-500 text-white text-[9px] rounded-full flex items-center justify-center font-bold">
               {alerts}
